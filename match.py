@@ -21,25 +21,36 @@ regex = re.compile('u301_density_6_c(\d{4}).png')
 print("The files matching this format are: ")
 
 final_list=[]
+code_list = []
+
 for file in new_list:
 	match = regex.match(file)
 	if match:
 		final_list.append(file)	
 		found = match
 		print(file)
-		code_tuple = match.groups()
-		print(code_tuple)
+		code_list = match.groups()
+		print(code_list)
 
-code_list = list(code_tuple)
 final_list.reverse()
 
 
-df =pd.DataFrame(list(zip(code_list, final_list)),
-	columns = ['Code ID', 'Image'])
-pd.set_option('max_columns', None)
-pd.set_option('max_rows', None)
-result = df.to_html()
-print(result)
+
+zip_list = list(zip(code_list, final_list))
+
+print(zip_list)
+
+for index, tuple in enumerate(zip_list):
+	element_one = tuple[0]
+	element_two = tuple[1]
+	print(element_one,element_two)
+
+#df =pd.DataFrame(list(zip(code_list, final_list)), columns = ['Code ID', 'Image'])
+
+	
+
+#result = df.to_html()
+#print(result)
 
 
 #------------------------------------------------------------------
