@@ -4,7 +4,7 @@ import os
 import jinja2
 import pandas as pd
 from IPython.display import HTML
-
+import numpy as np
 
 list_files=glob.glob("**", recursive=True) 
 
@@ -21,7 +21,7 @@ regex = re.compile('u301_density_6_c(\d{4}).png')
 print("The files matching this format are: ")
 
 final_list=[]
-code_list = []
+core_list = []
 
 for file in new_list:
 	match = regex.match(file)
@@ -29,27 +29,41 @@ for file in new_list:
 		final_list.append(file)	
 		found = match
 		print(file)
-		code_list = match.groups()
-		print(code_list)
+		#core_num = match.groups()
+	 	#core_list.append(core_num)
+		#print(core_list)
 
-final_list.reverse()
+for file in final_list:
+	match = regex.match(file)
+	if match:
+		core_num = match.groups()
+		core_list.append(core_num)
 
 
 
-zip_list = list(zip(code_list, final_list))
 
-print(zip_list)
+df = pd.DataFrame(core_list,columns=['Core ID'])
+df['Image'] = final_list
 
-for index, tuple in enumerate(zip_list):
-	element_one = tuple[0]
-	element_two = tuple[1]
-	print(element_one,element_two)
+def path_to_image_html(path):
+	return '<img src "'+ path + '"width= "60">'
 
-#df =pd.DataFrame(list(zip(code_list, final_list)), columns = ['Code ID', 'Image'])
+pd.set_option('display.max_colwidth', None)
 
-	
+image_cols = ['Image']
 
-#result = df.to_html()
+format_dict = {}
+for image_col in image_cols:
+	format_dict[image_col] = path_to_image_html
+
+
+df.to_html('u301_table.html',escape=False, formatters=format_dict)
+
+
+#df = pd.DataFrame(list(zip(core_list,final_list)),
+#	columns=['Core ID', 'Image'])
+
+#result = df.to_html('u301_table.html')
 #print(result)
 
 
