@@ -46,7 +46,7 @@ df = pd.DataFrame(core_list,columns=['Core ID'])
 df['Image'] = final_list
 
 def path_to_image_html(path):
-	return '<img src "'+ path + '"width= "60">'
+	return '<img src="'+ path + '" width= "60">'
 
 pd.set_option('display.max_colwidth', None)
 
@@ -74,30 +74,3 @@ df.to_html('u301_table.html',escape=False, formatters=format_dict)
 
 
 
-#title = 'Density Table'
-#outputfile = 'Density_Core.html'
-
-#subs = jinja2.Environment(
-#                loader=jinja2.FileSystemLoader('./')
-
-#).get_template('template.html').render(title=title,mydata=table_data)
-#
-#with open(outputfile,'w') as f: f.write(subs)
-
-
-#index_break = len(code_list)
-#if len(final_list) % index_break !=0:
-#	raise Exception('Not enough data.')
-#staged_list = []
-#current_list = []
-#
-#for idx in range(0,len(final_list)):
-#	current_list.append(final_list[idx])
-#	
-#	if len(current_list) == index_break:
-#		staged_list.append(current_list.copy())
-#		current_list = []
-#
-#df = pd.DataFrame(data=staged_list, columns= code_list)
-#print(df.to_html())
-#---------------------------------------
