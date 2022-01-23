@@ -19,7 +19,7 @@ for file in list_files:
         new_list.append(file)
 #print(new_list)
 
-#-------------------------------------------------------------- u301 table-----------------------------------------------#
+#-------------------------------------------------------------- u301 density_time table-----------------------------------------------#
 
 regex = re.compile('(.*)/u301_density_6_c(\d{4}).png')
 
@@ -39,7 +39,7 @@ for file in u301_image_list:                                    #extract the cor
                 core_num_u301 = match.group(2)
                 u301_core_list.append(core_num_u301)
 
-#-------------------------------------------------------u302 table--------------#
+#-------------------------------------------------------u302 density_time table--------------#
 regex1 = re.compile('(.*)/u302_density_6_c(\d{4}).png')
 
 u302_image_list = []
@@ -59,7 +59,7 @@ for file in u302_image_list:
                 u302_core_list.append(core_num_u302)
 
 
-#--------------------------------------------------------u303 table----------------------------#
+#--------------------------------------------------------u303 density_time table----------------------------#
 
 
 regex2 = re.compile('(.*)/u303_density_6_c(\d{4}).png')
@@ -79,8 +79,30 @@ for file in u303_image_list:
                 core_num_u303 = match.group(2)
                 u303_core_list.append(core_num_u303)
 
+
+#---------------------------------------------------U301 Proj_x_density-----------------------------#
+
+regex3 = re.compile('(.*)/u301_peak_p(\d{4})_34_Projection_x_density.png')
+
+u301_proj_x_image_list = []
+u301__proj_x_peakid_list = []
+
+for file in new_list:
+        match = regex3.match(file)
+        if match:
+                u301_proj_x_image_list.append(file)
+                found = match
+
+for file in u301_proj_x_image_list:
+        match = regex3.match(file)
+        if match:
+                u301_peakid_num = match.group(2)
+                u301__proj_x_peakid_list.append(u301_peakid_num)
+
+print(u301__proj_x_peakid_list)
+
 #-----------------------------------------------Flask app/data-----------------------------------#
-headings = ('Core ID','Images')
+headings = ('Core ID','Density_time')
 data = tuple(zip(u301_core_list,u301_image_list))
 
 data1 = tuple(zip(u302_core_list, u302_image_list))
