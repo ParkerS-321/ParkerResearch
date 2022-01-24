@@ -99,15 +99,19 @@ for file in u301_proj_x_image_list:
                 u301_peakid_num = match.group(2)
                 u301__proj_x_peakid_list.append(u301_peakid_num)
 
-print(u301__proj_x_peakid_list)
+#print(u301__proj_x_peakid_list)
 
 #-----------------------------------------------Flask app/data-----------------------------------#
 headings = ('Core ID','Density_time')
-data = tuple(zip(u301_core_list,u301_image_list))
+headings1 = ('Peak ID', 'Projection_x')
 
-data1 = tuple(zip(u302_core_list, u302_image_list))
+data = tuple(zip(u301_core_list,u301_image_list))    #u301 density_time
 
-data2 = tuple(zip(u303_core_list, u303_image_list))
+data1 = tuple(zip(u302_core_list, u302_image_list))  #u302 density_time
+
+data2 = tuple(zip(u303_core_list, u303_image_list))  # u303 density_time
+
+data3 = tuple(zip(u301_proj_x_image_list, u301__proj_x_peakid_list))  #u301 projection_x
 
 app = Flask(__name__, template_folder='templates')
 
@@ -116,8 +120,8 @@ def home():
 	return render_template("home.html")	
 
 @app.route('/u301')
-def u301_table():
-	return render_template("table_u301.html", headings = headings, data=data)
+def u301_tables():
+	return render_template("table_u301.html", headings=headings, headings1=headings1, data=data, data3=data3)
 
 @app.route('/u302')
 def u302_table():
