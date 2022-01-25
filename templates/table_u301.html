@@ -5,9 +5,8 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title> U301 </title>
 
-		<!--<script src="/static/Good/browser/sorttable.js"></script>
-		<link rel="stylesheet"  href="/static/Good/browser/sorttable.css">
-                -->
+		<script src="/static/Good/browser/sorttable.js"></script>
+		<link rel="stylesheet" href="/static/Good/browser/sorttable.css">
                 <style>
                         body {font-family: Arial;}
                         
@@ -52,14 +51,23 @@
 	</head>
 	<body>
                 <h1>Welcome to U301 Simulations </h1>
+                <p> Please Select Which Plots You Would Like to View! </p>
+                <p1> Once clicked, sort into ascending order as needed </p1>
 
+          
           <div class ="tab">
                   <button class="tablinks" onclick="openTable(event, 'Density_Time')"> Density_Time</button>
-                  <button class="tablinks" onclick="openTable(event, 'Projection_x')"> Projection_x_Density</button>
+                  <button class="tablinks" onclick="openTable(event, 'Peak_Projection_X_Density')"> Peak_Projection_x_Density</button>
+                  <button class="tablinks" onclick="openTable(event, 'Peak_Split_All_Excluded_Projection_x/y_density')"> Peak_Split_All_Excluded_Projection_density </button>
+                  <button class="tablinks" onclick="openTable(event, 'Peak_Split_Corestack_projection_density')"> Peak_Split_Corestack_Projection_Density </button>
+                  <button class="tablinks" onclick="openTable(event, 'Peak_Split_NewClump_Projection_Density')"> Peak_Split_NewClump_Projection_Density </button>
+                  <button class="tablinks" onclick="openTable(event, 'Core_Zoom_Annotate_Projection_X')"> Core_Zoom_Annotate_Projection_X</button>
           </div>
+          
+          
           <!-- U301 Density_Time Table-->
           <div id="Density_Time" class="tabcontent">
-                <table border = "1">
+                <table class="sortable" border = "1">
                         <tr>
                                 {% for header in headings %}
                                 <th>{{header}}</th>
@@ -68,14 +76,16 @@
 			{% for row in data %}
                         <tr>
 				<td>{{row[0]}}</td>
-                                <td><a href="/static/{{row[1]}}"/><img src = "/static/{{row[1]}}"></td>
+                                <td><a href="/{{row[1]}}"/><img src = "/{{row[1]}}"></td>
 			</tr>
 			{% endfor %}	
 		</table>
            </div>
-        <!-- U301 Projection_x_density table-->
-           <div id ="Projection_x" class="tabcontent">
-                 <table border = "1">
+        
+           <!-- U301 Projection_x_density table-->
+           
+           <div id ="Peak_Projection_X_Density" class="tabcontent">
+                 <table class="sortable" border = "1">
                         <tr>
                                 {% for header in headings1 %}  
                                 <th> {{header}}</th> 
@@ -84,12 +94,86 @@
                         {% for row in data3 %}
                         <tr>
                                 <td>{{row[1]}}</td>
-                                <td><a href="/static/{{row[0]}}"/><img src = "/static/{{row[0]}}" width="600" height="500"></td>
+                                <td><a href="/{{row[0]}}"/><img src = "/{{row[0]}}" width="600" height="500"></td>
                         </tr>
                         {% endfor %}
                  </table>
            </div>
         
+        <!--  U301 Peak Split All Table     -->
+        
+        <div id ="Peak_Split_All_Excluded_Projection_x/y_density" class = "tabcontent">
+                <table class = "sortable" border = "1">
+                        <tr>
+                                {% for header in headings2 %}
+                                <th>{{header}} </th>
+                                {% endfor %}
+                        </tr>
+                        {% for row in data4 %}
+                        <tr>
+                                <td>{{row[2]}}</td>
+                                <td><a href = "/{{row[0]}}"/><img src = "/{{row[0]}}" width = "600" height = "500"></td>
+                                <td> <a href = "/{{row[1]}}"/><img src = "/{{row[1]}}" width = "600" height = "500"></td>
+                        </tr>
+                        {% endfor %}
+                </table>
+        </div>
+        
+        <!--    U301 peak_split_corestack-->
+        <div id = "Peak_Split_Corestack_projection_density" class = "tabcontent">
+                <table class = "sortable" border = "1">
+                        <tr>
+                                {% for header in headings3 %}
+                                <th> {{header}}</th>
+                                {% endfor %}
+                        </tr>
+                        {% for row in data5 %}
+                        <tr>
+                                <td> {{row[2]}}</td>
+                                <td><a href = "/{{row[0]}}"/><img src ="/{{row[0]}}" width = "600" height = "500"></td>
+                                <td><a href = "/{{row[1]}}"/><img src ="/{{row[1]}}" width = "600" height = "500"></td>
+                        </tr>
+                        {% endfor %}
+                </table>
+        </div>
+        
+        <!--     U301 Peak_split_newclump table-->
+        <div id ="Peak_Split_NewClump_Projection_Density" class = "tabcontent">
+                <table class = "sortable" border ="1">
+                        <tr>
+                                {% for header in headings4 %}
+                                <th> {{header}} </th>
+                                {% endfor %}
+                        </tr>
+                        {% for row in data6 %}
+                        <tr>
+                                <td> {{row[2]}}</td>
+                                <td><a href = "/{{row[0]}}"/><img src ="/{{row[0]}}" width = "600" height = "500"></td>
+                                <td><a href = "/{{row[1]}}"/><img src ="/{{row[1]}}" width = "600" height = "500"></td>
+                        </tr>
+                        {% endfor %}
+                </table>
+        </div>
+        
+        
+        
+           <!--- U301 Core_Zoom_Annotate table-->
+           
+           <div id ="Core_Zoom_Annotate_Projection_X_Density" class = "tabcontent">
+                   <table class="sortable" border = "1">
+                           <tr>
+                                   {% for header in headings2 %}  
+                                   <th> {{header}}</th> 
+                                   {% endfor %}           
+                           </tr>
+                           {% for row in data4 %}
+                           <tr>
+                                   <td>{{row[1]}}</td>
+                                   <td><a href="/{{row[0]}}"/><img src = "/{{row[0]}}" width="600" height="500"></td>
+                           </tr>
+                           {% endfor %}
+                   </table>
+           </div>
         
         <script>
         function openTable(evt, TableName) {
