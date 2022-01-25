@@ -99,11 +99,92 @@ for file in u301_proj_x_image_list:
                 u301_peakid_num = match.group(2)
                 u301__proj_x_peakid_list.append(u301_peakid_num)
 
-#print(u301__proj_x_peakid_list)
+
+#---------------------------------------------------- U301 Peak Split All Table --------------------------------#
+regex4 = re.compile('(.*)/u301_peak_split_all_excluded_c(\d{4})_c(\d{4})_Projection_x_density.png')
+regex5 = re.compile('(.*)/u301_peak_split_all_excluded_c(\d{4})_c(\d{4})_Projection_y_density.png')
+u301_peak_split_proj_x_list = []
+u301_peak_split_proj_y_list = []
+excluded_core_list =['0015-0016','0017-0019','0040-0042','0042-0043','0108-0111','0166-0167','0194-0196','0197-0200','0202-0203','0261-0262','0261-0263','0262-0263']
+
+
+for file in new_list:
+        match=regex4.match(file)
+        match1=regex5.match(file)
+        if match:
+                u301_peak_split_proj_x_list.append(file)
+                found = match
+        if match1:
+                u301_peak_split_proj_y_list.append(file)
+                found=match1
+
+
+#------------------------------------------------- U301 Peak_split_corestack table --------------------------------#
+regex6 = re.compile('(.*)/u301_peak_split_corestack_c(\d{4})_c(\d{4})_Projection_x_density.png')
+regex7 = re.compile('(.*)/u301_peak_split_corestack_c(\d{4})_c(\d{4})_Projection_x_density.png')
+u301_peak_split_corestack_x_list = []
+u301_peak_split_corestack_y_list = []
+corestack_list = ['0015-0016','0017-0019','0040-0042','0042-0043','0108-0111','0166-0167','0194-0196','0197-0200','0202-0203','0261-0262','0261-0263','0262-0263']
+
+for file in new_list:
+        match = regex6.match(file)
+        match1 = regex7.match(file)
+        if match:
+                u301_peak_split_corestack_x_list.append(file)
+                found=match
+        if match1:
+                u301_peak_split_corestack_y_list.append(file)
+                found=match1
+
+#----------------------------------------- U301_peak_split_new clump table-------------------------#
+regex8 = re.compile('(.*)/u301_peak_split_newclump_c(\d{4})_c(\d{4})_Projection_x_density.png')
+regex9 = re.compile('(.*)/u301_peak_split_newclump_c(\d{4})_c(\d{4})_Projection_y_density.png')
+
+u301_peak_split_newclump_x_list = []
+u301_peak_split_newclump_y_list = []
+newclump_list = ['0015-0016','0017-0019','0040-0042','0042-0043','0108-0111','0166-0167','0194-0196','0197-0200','0202-0203','0261-0262','0261-0263','0262-0263']
+
+for file in new_list:
+        match = regex8.match(file)
+        match1 = regex9.match(file)
+        if match:
+                u301_peak_split_newclump_x_list.append(file)
+                found=match
+        if match1:
+                u301_peak_split_newclump_y_list.append(file)
+                found=match1
+                
+
+#----------------------------------------------U301 _core_zoom_annotate..._projection_x
+
+#regex = re.compile('(.*)/u301_core_zoom_annotate_c(\d{4})_n(\d{4})_Projection_x_density.png')
+#u301_core_zoom_image_list=[]
+#u301_core_zoom_corenum_list=[]
+
+#for file in new_list:
+#       match = regex4.match(file)
+#        if match:
+#                u301_core_zoom_image_list.append(file)
+#                found = match
+#for file in u301_core_zoom_image_list:
+#        match = regex4.match(file)
+#        if match:
+#                u301_core_zoom_num = match.group(2)
+#                u301_core_zoom_corenum_list.append(u301_core_zoom_num)
+
+
+        
+#print(u301_core_zoom_corenum_list)
+
 
 #-----------------------------------------------Flask app/data-----------------------------------#
 headings = ('Core ID','Density_time')
 headings1 = ('Peak ID', 'Projection_x')
+headings2 = ('Excluded Core Number', 'Peak_Split_All_Projection_X', 'Peak_Split_All_Projection_Y')
+headings3 = ('Corestack Number', 'Peak_Split_Corestack_Projection_X', 'Peak_Split_Corestack_Projection_Y')
+headings4 = ('NewClump Number', 'Peak_Split_NewClump_Projection_X','Peak_Split_NewClump_Projection_Y')
+
+#headings = ('Core ID', 'Core_Zoom_Annotate_Projection_X')
 
 data = tuple(zip(u301_core_list,u301_image_list))    #u301 density_time
 
@@ -113,6 +194,14 @@ data2 = tuple(zip(u303_core_list, u303_image_list))  # u303 density_time
 
 data3 = tuple(zip(u301_proj_x_image_list, u301__proj_x_peakid_list))  #u301 projection_x
 
+data4= tuple(zip(u301_peak_split_proj_x_list,u301_peak_split_proj_y_list,excluded_core_list))
+
+data5 = tuple(zip(u301_peak_split_corestack_x_list, u301_peak_split_corestack_y_list, corestack_list))
+
+data6 =tuple(zip(u301_peak_split_newclump_x_list,u301_peak_split_newclump_y_list,newclump_list))
+
+#data = tuple(zip(u301_core_zoom_image_list,u301_core_zoom_corenum_list))  #u301 core_zoom_annotate list
+
 app = Flask(__name__, template_folder='templates')
 
 @app.route("/")
@@ -121,7 +210,7 @@ def home():
 
 @app.route('/u301')
 def u301_tables():
-	return render_template("table_u301.html", headings=headings, headings1=headings1, data=data, data3=data3)
+	return render_template("table_u301.html", headings=headings, headings1=headings1, data=data, data3=data3, headings2=headings2, data4=data4, headings3=headings3, data5=data5, headings4=headings4, data6=data6)
 
 @app.route('/u302')
 def u302_table():
