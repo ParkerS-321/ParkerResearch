@@ -3,7 +3,7 @@
         <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title> U301 </title>
+                <title> U303 </title>
 
 		<script src="/static/Good/browser/sorttable.js"></script>
                 <script> 
@@ -56,7 +56,7 @@
 
 	</head>
 	<body>
-                <h1>Welcome to U301 Simulations </h1>
+                <h1>Welcome to U303 Simulations </h1>
                 <ul>
                        <li> Please Select Which Plots You Would Like to View! </li>
                        <li style="padding: 0 7em 1em 0"> Once clicked, sort into ascending order as needed </li>
@@ -65,7 +65,7 @@
           <div class ="tab">
                   <button class="tablinks" onclick="openTable(event, 'Density_Time')"> Density_Time</button>
                   <button class="tablinks" onclick="openTable(event, 'Peak_Projection_X_Density')"> Peak_Projection_x_Density</button>
-                  <button class="tablinks" onclick="openTable(event, 'Peak_Split_All_Excluded_Projection_x/y_density')"> Peak_Split_Excluded_Projection_Density </button>
+                  <button class="tablinks" onclick="openTable(event, 'Peak_Split_All_Excluded_Projection_x/y_density')"> Peak_Split_All_Excluded_Projection_Density </button>
                   <button class="tablinks" onclick="openTable(event, 'Peak_Split_Corestack_projection_density')"> Peak_Split_Corestack_Projection_Density </button>
                   <button class="tablinks" onclick="openTable(event, 'Peak_Split_NewClump_Projection_Density')"> Peak_Split_NewClump_Projection_Density </button>
                   <button class="tablinks" onclick="openTable(event, 'Peak_Split_Orig_Projection_Density')"> Peak_Split_Orig_Projection_Density </button>
@@ -73,7 +73,7 @@
           </div>
           
           
-          <!-- U301 Density_Time Table-->
+          <!-- U303 Density_Time Table-->
           <div id="Density_Time" class="tabcontent">
                 <table class="sortable" border = "1">
                         <tr>
@@ -81,16 +81,16 @@
                                 <th>{{header}}</th>
                                 {% endfor %}
                         </tr>
-			{% for row in data %}
+			{% for row in data15 %}
                         <tr>
-				<td>{{row[0]}}</td>
-                                <td><a href="/{{row[1]}}"/><img src = "/{{row[1]}}"></td>
+				<td>{{row[1]}}</td>
+                                <td><a href="/{{row[0]}}"/><img src = "/{{row[0]}}"></td>
 			</tr>
 			{% endfor %}	
 		</table>
            </div>
         
-           <!-- U301 Projection_x_density table-->
+           <!-- U303 Projection_x_density table-->
            
            <div id ="Peak_Projection_X_Density" class="tabcontent">
                  <table class="sortable" border = "1">
@@ -99,7 +99,7 @@
                                 <th> {{header}}</th> 
                                 {% endfor %}           
                         </tr>
-                        {% for row in data3 %}
+                        {% for row in data16_every2 %}
                         <tr>
                                 <td>{{row[1]}}</td>
                                 <td><a href="/{{row[0]}}"/><img src = "/{{row[0]}}" width="600" height="500"></td>
@@ -108,7 +108,7 @@
                  </table>
            </div>
         
-        <!--  U301 Peak Split All Table     -->
+        <!--  U303 Peak Split All Table     -->
         
         <div id ="Peak_Split_All_Excluded_Projection_x/y_density" class = "tabcontent">
                 <table style="float:left;" class = "sortable" border = "1">
@@ -117,30 +117,29 @@
                                 <th>{{header}} </th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data4 %}
+                        {% for row in data17 %}
                         <tr>
                                 <td width="125">{{row[2]}}</td>
                                 <td><a href = "/{{row[0]}}"/><img src = "/{{row[0]}}" width = "550" height = "500"></td>
                         </tr>
                         {% endfor %}
                 </table>
-                
                 <table class = "sortable" border = "1">
                         <tr>
                                 {% for header in headings2_y %}
-                                <th> {{header}} </th>
+                                <th>{{header}} </th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data4 %}
+                        {% for row in data17 %}
                         <tr>
                                 <td width="125">{{row[3]}}</td>
-                                <td><a href = "/{{row[1]}}"/><img src = "/{{row[1]}}" width = "550" height = "500"></td>
+                                <td> <a href = "/{{row[1]}}"/><img src = "/{{row[1]}}" width = "550" height = "500"></td>
                         </tr>
                         {% endfor %}
                 </table>
         </div>
         
-        <!--    U301 peak_split_corestack-->
+        <!--    U303 peak_split_corestack-->
         <div id = "Peak_Split_Corestack_projection_density" class = "tabcontent">
                 <table style="float:left;" class = "sortable" border = "1">
                         <tr>
@@ -148,10 +147,10 @@
                                 <th> {{header}}</th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data5 %}
+                        {% for row in data18 %}
                         <tr>
-                                <td width = "125"> {{row[2]}}</td>
-                                <td><a href = "/{{row[0]}}"/><img src ="/{{row[0]}}" width = "550" height = "500" ></td>
+                                <td width="125"> {{row[2]}}</td>
+                                <td><a href = "/{{row[0]}}"/><img src ="/{{row[0]}}" width = "550" height = "500"></td>
                         </tr>
                         {% endfor %}
                 </table>
@@ -161,16 +160,16 @@
                                 <th> {{header}}</th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data5 %}
+                        {% for row in data18 %}
                         <tr>
-                                <td width ="125"> {{row[3]}}</td>
+                                <td width="125"> {{row[3]}}</td>
                                 <td><a href = "/{{row[1]}}"/><img src ="/{{row[1]}}" width = "550" height = "500"></td>
                         </tr>
                         {% endfor %}
                 </table>
         </div>
         
-        <!--     U301 Peak_split_newclump table-->
+        <!--     U303 Peak_split_newclump table-->
         <div id ="Peak_Split_NewClump_Projection_Density" class = "tabcontent">
                 <table style="float:left;" class = "sortable" border ="1">
                         <tr>
@@ -178,29 +177,29 @@
                                 <th> {{header}} </th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data6 %}
+                        {% for row in data19 %}
                         <tr>
-                                <td width ="125"> {{row[2]}}</td>
+                                <td width="125"> {{row[2]}}</td>
                                 <td><a href = "/{{row[0]}}"/><img src ="/{{row[0]}}" width = "550" height = "500"></td>
                         </tr>
                         {% endfor %}
                 </table>
                 <table class = "sortable" border ="1">
                         <tr>
-                                {% for header in headings4_x %}
+                                {% for header in headings4_y %}
                                 <th> {{header}} </th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data6 %}
+                        {% for row in data19 %}
                         <tr>
-                                <td width = "125"> {{row[3]}}</td>
+                                <td width="125"> {{row[3]}}</td>
                                 <td><a href = "/{{row[1]}}"/><img src ="/{{row[1]}}" width = "550" height = "500"></td>
                         </tr>
                         {% endfor %}
                 </table>
         </div>
         
-        <!-- U301 Peak_Split_Orig table-->
+        <!-- U303 Peak_Split_Orig table-->
         <div id = "Peak_Split_Orig_Projection_Density" class = "tabcontent">
                 <table style="float:left;" class = "sortable" border = "1">
                         <tr>
@@ -208,7 +207,7 @@
                                 <th> {{header}}</th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data7 %}
+                        {% for row in data20 %}
                         <tr>
                                 <td width="125"> {{row[2]}}</td>
                                 <td><a href = "/{{row[0]}}"/><img src = "/{{row[0]}}" width = "550" height = "500"></td>
@@ -221,7 +220,7 @@
                                 <th> {{header}}</th>
                                 {% endfor %}
                         </tr>
-                        {% for row in data7 %}
+                        {% for row in data20 %}
                         <tr>
                                 <td width="125"> {{row[3]}}</td>
                                 <td><a href = "/{{row[1]}}"/><img src = "/{{row[1]}}" width = "550" height = "500"></td>
@@ -231,35 +230,35 @@
         </div>
 
         
-           <!--- U301 Core_Zoom_Annotate table-->
+           <!--- U303 Core_Zoom_Annotate table-->
            
            <div id ="Core_Zoom_Annotate_Projection_X" class = "tabcontent">
                    <table class="sortable" border = "1">
-                        <p> Some Cores Dont Have all of the n{...} Simulations, Image will Not Appear If Thats the Case</p>        
-                          <tr>
+                       <p> Some Cores Dont Have all of the n{...} Simulations, Image will Not Appear If Thats the Case</p>    
+                           <tr>
                                    {% for header in headings6 %}  
                                    <th> {{header}}</th> 
                                    {% endfor %}           
                            </tr>
-                           {% for row in data8_every14 %}
+                           {% for row in data21_every14 %}
                            <tr>
                                    <td>{{row[1]}}</td>
-                                   <td><a h<figure><a href="/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0000_Projection_x_density.png"><img src = "/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0000_Projection_x_density.png" width="600" id=core_proj_follow_c{{row[1]}}></a><figcaption></figcaption></figcaption></figure>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0000_Projection_x_density.png')> n0000 </button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0010_Projection_x_density.png')> n0010 </button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0020_Projection_x_density.png')> n0020</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0030_Projection_x_density.png')> n0030</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0040_Projection_x_density.png')> n0040</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0050_Projection_x_density.png')> n0050</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0060_Projection_x_density.png')> n0060</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0070_Projection_x_density.png')> n0070</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0080_Projection_x_density.png')> n0080</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0090_Projection_x_density.png')> n0090</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0100_Projection_x_density.png')> n0100</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0110_Projection_x_density.png')> n0110</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0118_Projection_x_density.png')> n0118</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0120_Projection_x_density.png')> n0120</button>
-                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u301/u301_core_zoom_annotate_c{{row[1]}}_n0125_Projection_x_density.png')> n0125</button>
+                                   <td><a h<figure><a href="/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0000_Projection_x_density.png"><img src = "/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0000_Projection_x_density.png" width="600" id=core_proj_follow_c{{row[1]}}></a><figcaption></figcaption></figcaption></figure>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0000_Projection_x_density.png')> n0000 </button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0010_Projection_x_density.png')> n0010 </button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0020_Projection_x_density.png')> n0020</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0030_Projection_x_density.png')> n0030</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0040_Projection_x_density.png')> n0040</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0050_Projection_x_density.png')> n0050</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0060_Projection_x_density.png')> n0060</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0070_Projection_x_density.png')> n0070</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0080_Projection_x_density.png')> n0080</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0090_Projection_x_density.png')> n0090</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0100_Projection_x_density.png')> n0100</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0110_Projection_x_density.png')> n0110</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0118_Projection_x_density.png')> n0118</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0120_Projection_x_density.png')> n0120</button>
+                                        <button onclick=set_image('core_proj_follow_c{{row[1]}}','/static/Good/Cores/u303/u303_core_zoom_annotate_c{{row[1]}}_n0125_Projection_x_density.png')> n0125</button>
                                    </td>
                           </tr>
                         {% endfor %}
@@ -284,4 +283,3 @@
 
 	</body>
 </html>
-
