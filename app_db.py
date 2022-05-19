@@ -18,6 +18,7 @@ def my_form():
 @app.route('/table', methods=['POST','GET'])
 
 def getCore():
+
 	value = request.form.get('sim')
 	if value == '1':
 		conn=sqlite3.connect('sim1.db')
@@ -27,17 +28,44 @@ def getCore():
 		conn = sqlite3.connect('sim3.db')
 
 	db = conn.cursor()
-	core_id = request.form.get('core')
-	db.execute('SELECT blowhair.sim1_img, densitytime.sim1_img FROM blowhair,densitytime WHERE blowhair.core=? AND densitytime.core=?',(core_id, core_id,))
+	
+	cores_id = request.form.get('cores')
+	core_list = cores_id.split(",")
+	core_tuple = tuple(core_list)
+	
+#	products = request.form.get('products')
+#	product_list = products.split(",")
+#	prod_tuple = tuple(product_list)
+
+
+	if value == '1':
+		#query = "SELECT blowhair.sim1_img FROM blowhair WHERE blowhair.core IN ({core_list}) UNION SELECT densitytime.sim1_img FROM densitytime WHERE densitytime.core IN ({core_list})"
+		query = "SELECT * FROM blowhair WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)))
+		db.execute(query, core_list)
+
+	if value == '2':
+		query = "SELECT * FROM blowhair WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)))
+		db.execute(query, core_list)
+		#db.execute('SELECT blowhair.sim2_img, densitytime.sim2_img FROM blowhair,densitytime WHERE blowhair.core=? AND densitytime.core=?',(core_id, core_id,))
+
+	if value == '3':
+		db.execute('SELECT blowhair.sim3_img, densitytime.sim3_img FROM blowhair,densitytime WHERE blowhair.core=? AND densitytime.core=?',(core_id, core_id,))
+
 	rows=db.fetchall()
+
+	img_list = []
+	decode_img_list = []
+	user_core_list = []
+	#n = 2
+	#img_list.append([x[n] for x in rows])
 	
-	blob_blowhair_img=[]	
-	blob_densitytime_img=[]
 	for row in rows:
-		blob_blowhair_img = b64encode(row[0]).decode('utf-8')
-		blob_densitytime_img = b64encode(row[1]).decode('utf-8')
+		decode_img_list.append(b64encode(row[2]).decode('utf-8'))	
+		user_core_list.append(row[1])	
+	blowhair_tup = tuple(zip(user_core_list,decode_img_list))
 	
-	return render_template('table.html',core_id=core_id, rows=rows, blob_blowhair_img=blob_blowhair_img, blob_densitytime_img=blob_densitytime_img)
+	return render_template('table.html',core_list=core_list, blowhair_tup=blowhair_tup)
 
 if __name__ == "__main__":
 	app.run(debug=True)
+
