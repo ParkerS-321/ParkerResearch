@@ -4,11 +4,10 @@
  </head>
  <body>
   <table border="1">
-  {% for row in rows %}
-  <tr>
-        <td>{{core_id}}</td>
-	<td><img src="data:image/png;base64, {{blob_blowhair_img}}" width="600" height="500"/></td>
-	<td><img src="data:image1/png;base64, {{blob_densitytime_img}}" width="600" height="500"/></td>
+  {% for row in blowhair_tup %}
+  </tr>
+	<td>{{row[0]}}</td>
+	<td><img src="data:image/png;base64, {{row[1]}}" width="600" height="500"/></td>
   </tr>
   {% endfor %}
   </table>
