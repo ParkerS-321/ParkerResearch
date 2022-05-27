@@ -1,15 +1,42 @@
 <html>
  <head>
   <title> Core Plots</title>
+
+  <style>
+	table {
+		display: table;
+	}
+	table tr {
+		display: table-cell;
+	}
+	table tr td {
+		display: block;
+	}
+  </style>
+
  </head>
- <body>
+ 
+  <body>
   <table border="1">
-  {% for row in blowhair_tup %}
+  <tr>
+	{% for core in core_query_list %}
+	<td>{{core}}</td>
+	{% endfor %}
   </tr>
-	<td>{{row[0]}}</td>
-	<td><img src="data:image/png;base64, {{row[1]}}" width="600" height="500"/></td>
+  <tr style="vertical-align:top">
+	{% for img in list0 %}
+	<td><img src="data:image/png;base64, {{img}}" width="600" height="500"/></td>
+ 	{% endfor %}
   </tr>
-  {% endfor %}
+  <tr style="vertical-align:top"> 
+	{% for img in list1 %} 
+	<td><img src="data:image/png;base64, {{img}}" width="600" height="500"/></td>
+  	{% endfor %}
+  </tr>
   </table>
   </body>
   </html>
+
+
+
+
