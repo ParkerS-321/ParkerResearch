@@ -2,37 +2,18 @@
  <head>
   <title> Core Plots</title>
 
-  <style>
-	table {
-		display: table;
-	}
-	table tr {
-		display: table-cell;
-	}
-	table tr td {
-		display: block;
-	}
-  </style>
 
  </head>
  
   <body>
   <table border="1">
-  <tr>
-	{% for core in core_query_list %}
-	<td>{{core}}</td>
+ {% for product in productList %}
+  <tr>  
+	{% for p in product %}
+	<td> {{p|safe}} </td>
 	{% endfor %}
   </tr>
-  <tr style="vertical-align:top">
-	{% for img in list0 %}
-	<td><img src="data:image/png;base64, {{img}}" width="600" height="500"/></td>
- 	{% endfor %}
-  </tr>
-  <tr style="vertical-align:top"> 
-	{% for img in list1 %} 
-	<td><img src="data:image/png;base64, {{img}}" width="600" height="500"/></td>
-  	{% endfor %}
-  </tr>
+  {% endfor %}
   </table>
   </body>
   </html>
