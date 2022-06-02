@@ -4,6 +4,7 @@ from sqlite3 import Error
 #from flask_sqlalchemy import SQLAlchemy
 import base64
 from base64 import b64encode
+import pdb
 
 app = Flask(__name__, template_folder='templates')
 
@@ -31,21 +32,19 @@ def getCore():
 	
 	cores_id = request.form.get('cores')
 	core_list = cores_id.split(",")
-	core_tuple = tuple(core_list)
-	
+	core_set = set(core_list)
+
 	product_list = request.form.getlist('mycheckbox')
 #	product_list = product_list.split(",")
 	prod_tuple = tuple(product_list)
 
 
-	blowhair_tuple = []
-	densitytime_tuple = []
 
 	table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))
-	y = {}
-	
-	core_query_list = []
 
+	y = {}
+	query_core_list = []
+	
 	if value == '1':
 		#query = "SELECT blowhair.sim1_img FROM blowhair WHERE blowhair.core IN ({core_list}) UNION SELECT densitytime.sim1_img FROM densitytime WHERE densitytime.core IN ({core_list})"
 		query = "SELECT * FROM blowhair WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)))
@@ -53,32 +52,36 @@ def getCore():
 
 	if value == '2':
 		for tablename in table_list:
-			y[tablename] = []
+			y[tablename] = {'core_id':[], 'products':[]}
 			if tablename[0] in product_list:
 				product = str(tablename[0])
 				query = "SELECT {pro}.core,{pro}.sim2_img FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)
 				db.execute(query, core_list)
 				rows = db.fetchall()
 				for row in rows:
-					y[tablename].append(b64encode(row[1]).decode('utf-8'))
-					core_query_list.append(row[0])
-
+					y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
+					y[tablename]['core_id'].append(str(row[0]))
 	if value == '3':
 		db.execute('SELECT blowhair.sim3_img, densitytime.sim3_img FROM blowhair,densitytime WHERE blowhair.core=? AND densitytime.core=?',(core_id, core_id,))
 
+	THING = {}
+	for core_id in core_set:
+		THING[core_id] = []
+		for tablename in y:
+			if core_id not in y[tablename]['core_id']:
+				renderText = 'X'
+			else:
+				index = y[tablename]['core_id'].index(core_id)
+				res = y[tablename]['products'][index]
+				renderText = f'<img src="data:image/png;base64, {res}" width="500" height="500"/>'
+			THING[core_id].append(core_id)
+			THING[core_id].append(renderText)
 
-	
-	
-	#for value in y.values():
-	#	decode_dt_list.append(b64encode(row[2]).decode('utf-8'))	
-	#	user_core_list.append(row[1])	
-	#blowhair_tup = tuple(zip(user_core_list,decode_img_list))
-	
+	productList = []
+	for core_id in THING:
+		productList.append(THING[core_id])
 
-	list0 = list(y.values())[0]
-	list1 = list(y.values())[1]
-	
-	return render_template('table.html',core_query_list=core_query_list, list0=list0,list1=list1)
+	return render_template('table.html',core_set=core_set,productList=productList)
 
 if __name__ == "__main__":
 	app.run(debug=True)
