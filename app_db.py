@@ -41,10 +41,11 @@ def makeApp():
 
 
 	table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))
+	table_list_first_ele = []
+	for i in table_list:
+		table_list_first_ele.append(i[0])
 
 	y = {}
-	header_list = []
-	header_list.append('Core ID')
 	
 	if value == '1':
 		#query = "SELECT blowhair.sim1_img FROM blowhair WHERE blowhair.core IN ({core_list}) UNION SELECT densitytime.sim1_img FROM densitytime WHERE densitytime.core IN ({core_list})"
@@ -53,11 +54,10 @@ def makeApp():
 
 	if value == '2':
 		
-		for tablename in table_list:
-			header_list.append(str(tablename[0]))
+		for tablename in product_list:
 			y[tablename] = {'core_id':[], 'products':[]}
-			if tablename[0] in product_list:
-				product = str(tablename[0])
+			if tablename in table_list_first_ele:
+				product = str(tablename)
 				query = "SELECT {pro}.core,{pro}.sim2_img FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)
 				db.execute(query, core_list)
 				rows = db.fetchall()
@@ -84,7 +84,7 @@ def makeApp():
 	for core_id in THING:
 		productList.append(THING[core_id])
 
-	return render_template('table.html',core_set=core_set,productList=productList, header_list=header_list)
+	return render_template('table.html',core_set=core_set,productList=productList)
 
 if __name__ == "__main__":
 	app.run(debug=True)
