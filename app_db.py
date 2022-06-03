@@ -9,8 +9,6 @@ import pdb
 app = Flask(__name__, template_folder='templates')
 
 
-
-
 @app.route('/')
 def my_form():
 	return render_template('index.html')
@@ -18,7 +16,9 @@ def my_form():
 
 @app.route('/table', methods=['POST','GET'])
 
-def getCore():
+
+
+def makeApp():
 
 	value = request.form.get('sim')
 	if value == '1':
@@ -29,21 +29,22 @@ def getCore():
 		conn = sqlite3.connect('sim3.db')
 
 	db = conn.cursor()
+
+
 	
 	cores_id = request.form.get('cores')
 	core_list = cores_id.split(",")
 	core_set = set(core_list)
 
 	product_list = request.form.getlist('mycheckbox')
-#	product_list = product_list.split(",")
-	prod_tuple = tuple(product_list)
 
 
 
 	table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))
 
 	y = {}
-	query_core_list = []
+	header_list = []
+	header_list.append('Core ID')
 	
 	if value == '1':
 		#query = "SELECT blowhair.sim1_img FROM blowhair WHERE blowhair.core IN ({core_list}) UNION SELECT densitytime.sim1_img FROM densitytime WHERE densitytime.core IN ({core_list})"
@@ -51,7 +52,9 @@ def getCore():
 		db.execute(query, core_list)
 
 	if value == '2':
+		
 		for tablename in table_list:
+			header_list.append(str(tablename[0]))
 			y[tablename] = {'core_id':[], 'products':[]}
 			if tablename[0] in product_list:
 				product = str(tablename[0])
@@ -67,6 +70,7 @@ def getCore():
 	THING = {}
 	for core_id in core_set:
 		THING[core_id] = []
+		THING[core_id].append(core_id)
 		for tablename in y:
 			if core_id not in y[tablename]['core_id']:
 				renderText = 'X'
@@ -74,14 +78,13 @@ def getCore():
 				index = y[tablename]['core_id'].index(core_id)
 				res = y[tablename]['products'][index]
 				renderText = f'<img src="data:image/png;base64, {res}" width="500" height="500"/>'
-			THING[core_id].append(core_id)
 			THING[core_id].append(renderText)
 
 	productList = []
 	for core_id in THING:
 		productList.append(THING[core_id])
 
-	return render_template('table.html',core_set=core_set,productList=productList)
+	return render_template('table.html',core_set=core_set,productList=productList, header_list=header_list)
 
 if __name__ == "__main__":
 	app.run(debug=True)
