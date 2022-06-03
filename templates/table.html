@@ -1,12 +1,18 @@
 <html>
  <head>
   <title> Core Plots</title>
-
+  <script src="/static/Good/browser/sorttable.js"></script>
 
  </head>
  
   <body>
-  <table border="1">
+  <table class="sortable" border="1">
+ <tr>
+ {% for header in header_list %}
+   <th> {{header}} </th>
+ {% endfor %}
+ </tr>
+
  {% for product in productList %}
   <tr>  
 	{% for p in product %}
