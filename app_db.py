@@ -46,6 +46,8 @@ def makeApp():
 		table_list_first_ele.append(i[0])
 
 	y = {}
+	header_list = []
+	header_list.append('Core ID')
 	
 	if value == '1':
 		#query = "SELECT blowhair.sim1_img FROM blowhair WHERE blowhair.core IN ({core_list}) UNION SELECT densitytime.sim1_img FROM densitytime WHERE densitytime.core IN ({core_list})"
@@ -56,6 +58,7 @@ def makeApp():
 		
 		for tablename in product_list:
 			y[tablename] = {'core_id':[], 'products':[]}
+			header_list.append(str(tablename))
 			if tablename in table_list_first_ele:
 				product = str(tablename)
 				query = "SELECT {pro}.core,{pro}.sim2_img FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)
@@ -84,7 +87,7 @@ def makeApp():
 	for core_id in THING:
 		productList.append(THING[core_id])
 
-	return render_template('table.html',core_set=core_set,productList=productList)
+	return render_template('table.html',core_set=core_set,productList=productList, header_list=header_list)
 
 if __name__ == "__main__":
 	app.run(debug=True)
