@@ -1,0 +1,11 @@
+densitytime,(.*)/u303_density_6_c(\d{4}).png
+blowing_hair,(.*)/u503_hair_x_c(\d{4}).png
+binding_energy,(.*)/u503_c(\d{4})_potfit.png
+B_vs_rho_vs_time,(.*)/MeanBvsRho_u503_i(\d{4}).png
+density_time_hair,(.*)/u503_rho_t_c(\d{4}).png
+density_time_hair,(.*)/u503_rho_t_heat_c(\d{4}).png
+mountain_tops,(.*)/mountain_top_u603_c(\d{4})_Projection_x_density.png
+other_ones,(.*)/otherones_u403_c(\d{4})__0000_0125.png
+velocity_hair,u503_v_t_c(\d{4}).png
+velocity_heat,u503_v_t_heat_c(\d{4}).png
+vr_vt,u503_vr_vt_c(\d{4}).png
