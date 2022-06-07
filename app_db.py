@@ -22,11 +22,11 @@ def makeApp():
 
 	value = request.form.get('sim')
 	if value == '1':
-		conn=sqlite3.connect('sim1.db')
+		conn=sqlite3.connect('simulation1.db')
 	elif value == '2':
-		conn=sqlite3.connect('sim2.db')
+		conn=sqlite3.connect('simulation2.db')
 	elif value == '3':
-		conn = sqlite3.connect('sim3.db')
+		conn = sqlite3.connect('simulation3.db')
 
 	db = conn.cursor()
 
@@ -49,26 +49,17 @@ def makeApp():
 	header_list = []
 	header_list.append('Core ID')
 	
-	if value == '1':
-		#query = "SELECT blowhair.sim1_img FROM blowhair WHERE blowhair.core IN ({core_list}) UNION SELECT densitytime.sim1_img FROM densitytime WHERE densitytime.core IN ({core_list})"
-		query = "SELECT * FROM blowhair WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)))
-		db.execute(query, core_list)
-
-	if value == '2':
-		
-		for tablename in product_list:
-			y[tablename] = {'core_id':[], 'products':[]}
-			header_list.append(str(tablename))
-			if tablename in table_list_first_ele:
-				product = str(tablename)
-				query = "SELECT {pro}.core,{pro}.sim2_img FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)
-				db.execute(query, core_list)
-				rows = db.fetchall()
-				for row in rows:
-					y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
-					y[tablename]['core_id'].append(str(row[0]))
-	if value == '3':
-		db.execute('SELECT blowhair.sim3_img, densitytime.sim3_img FROM blowhair,densitytime WHERE blowhair.core=? AND densitytime.core=?',(core_id, core_id,))
+	for tablename in product_list:
+		y[tablename] = {'core_id':[], 'products':[]}
+		header_list.append(str(tablename))
+		if tablename in table_list_first_ele:
+			product = str(tablename)
+			query = "SELECT {pro}.core,{pro}.product FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)
+			db.execute(query, core_list)
+			rows = db.fetchall()
+			for row in rows:
+				y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
+				y[tablename]['core_id'].append(str(row[0]))
 
 	THING = {}
 	for core_id in core_set:
@@ -80,7 +71,7 @@ def makeApp():
 			else:
 				index = y[tablename]['core_id'].index(core_id)
 				res = y[tablename]['products'][index]
-				renderText = f'<img src="data:image/png;base64, {res}" width="500" height="500"/>'
+				renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>'
 			THING[core_id].append(renderText)
 
 	productList = []
