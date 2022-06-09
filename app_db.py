@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask, render_template,request
 from sqlite3 import Error
-#from flask_sqlalchemy import SQLAlchemy
 import base64
 from base64 import b64encode
 import pdb
@@ -24,7 +23,7 @@ def makeApp():
 	if value == '1':
 		conn=sqlite3.connect('simulation1.db')
 	elif value == '2':
-		conn=sqlite3.connect('simulation2.db')
+		conn=sqlite3.connect('simulation2.db')				#Connects to desired DB based on user input
 	elif value == '3':
 		conn = sqlite3.connect('simulation3.db')
 
@@ -40,21 +39,21 @@ def makeApp():
 
 
 
-	table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))
+	table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))			#Grabs a tuple of tables within the desired DB of the form (table, )
 	table_list_first_ele = []
 	for i in table_list:
-		table_list_first_ele.append(i[0])
+		table_list_first_ele.append(i[0])								#Just grabs the table name from the tuple
 
 	y = {}
 	header_list = []
 	header_list.append('Core ID')
 	
 	for tablename in product_list:
-		y[tablename] = {'core_id':[], 'products':[]}
+		y[tablename] = {'core_id':[], 'products':[]}							#Makes dictionary for core_id and the associated products
 		header_list.append(str(tablename))
 		if tablename in table_list_first_ele:
 			product = str(tablename)
-			query = "SELECT {pro}.core,{pro}.product FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)
+			query = "SELECT {pro}.core,{pro}.product FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)		
 			db.execute(query, core_list)
 			rows = db.fetchall()
 			for row in rows:
@@ -66,12 +65,12 @@ def makeApp():
 		THING[core_id] = []
 		THING[core_id].append(core_id)
 		for tablename in y:
-			if core_id not in y[tablename]['core_id']:
+			if core_id not in y[tablename]['core_id']:							
 				renderText = 'X'
 			else:
-				index = y[tablename]['core_id'].index(core_id)
+				index = y[tablename]['core_id'].index(core_id)						#Renders either 'X' if the product does not exist for the desired core
 				res = y[tablename]['products'][index]
-				renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>'
+				renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>'	#Otherwise renders the html text to read within table.html
 			THING[core_id].append(renderText)
 
 	productList = []
