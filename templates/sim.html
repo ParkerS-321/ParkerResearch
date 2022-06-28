@@ -1,0 +1,140 @@
+<html>
+<head>
+
+<script src="/static/Good/browser/sorttable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+li {
+  margin: 5px;
+  display: table-row;
+}
+
+li * {
+  display: table-cell;
+  padding: 0.5em;
+}
+
+input {
+  background-color: blue;
+  position: relative;
+}
+
+.checkbox {}
+
+li {
+  list-style: none;
+}
+input[type="checkbox"] {
+	zoom: 1.5;
+}
+
+
+</script>
+
+
+<header>
+<h1 align="center"> {{simText}} </h1>
+</header>
+
+<div style="position:relative; top: 25px;">
+<h2 style="position: relative; top: 50px; left: 50px;"> Table Builder </h2>
+<p style="position: relative; top: 50px; left: 10px;"> Select Desired Plots and Cores to Build Table </p>
+
+<form method="POST" action="/table">
+	<div style="position: relative; top: 50px; left: 40px;">
+	<ul>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="blowing_hair" name="mycheckbox"> Blow_Hair </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="densitytime" name="mycheckbox"> Density_Time </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="B_vs_rho_vs_time" name="mycheckbox"> B_Rho_t </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="binding_energy" name="mycheckbox"> Binding_E </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="density_time_hair" name="mycheckbox"> Density_t_hair </label
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="mountain_tops" name="mycheckbox"> Mountain_Tops </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="other_ones" name="mycheckbox"> Other_ones </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="velocity_hair" name="mycheckbox"> Velocity_hair </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="velocity_heat" name="mycheckbox"> Velocity_heat </label>
+	</li>
+	<li>
+	<label><input type="checkbox" value="vr_vt" name="mycheckbox"> <span> VR_VT </span></label>
+	</li>
+	</ul>
+	</div>
+
+
+</head>
+<div style="position:relative; top: 50px; left: 10px;">
+<p> Highlight Desired Core: </p>
+<input id="textBoxID" />
+<div style="position:relative; left: 175px; bottom:71px;">
+<p> Select All Cores: </p>
+<input type="checkbox" id="selectall" style="position:relative; left: 45px;">
+</div>
+</div>
+
+<input type="submit" value="Build Table!" style="position:relative; left: 90px;">
+</div>
+
+<div style="position:relative; left: 375px; bottom: 410px;">
+<table class="sortable" id="table" border="1" style="font-size: 120%">
+<tr>
+<th colspan="15"> Available Cores from Simulation </th>
+</tr>
+{% for row in core_list|batch(15, 'null') %}
+<tr>
+{% for core in row %}
+<td align="center"><input type="checkbox" value="{{core}}" name="core_check" class="btn_table"> {{core}} </td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+</div>
+</form>
+
+<script>
+$(function () {
+        $("#selectall").change(function () {
+            $('.btn_table').prop('checked', this.checked);
+        });
+        $(".btn_table").change(function () {
+            if ($(".btn_table").length == $(".btn_table:checked").length) {
+                $('#selectall').prop('checked', this.checked);
+            } else {
+                $('#selectall').prop('checked', false);
+            }
+        });
+    });
+
+$.extend($.expr[":"], {
+"containsNC": function(elem, i, match, array) {
+return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+}
+});
+$('#textBoxID').keyup(function(){
+      $('td').css("background-color",''); 
+    var value= $(this).val();
+     $('td:containsNC("'+value+'")').css("background-color",'yellow');
+ });
+
+
+</script>
+
+
+</html>
