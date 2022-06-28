@@ -1,25 +1,64 @@
 import sqlite3
-from flask import Flask, render_template,request
+from flask import Flask, render_template,request,session
 from sqlite3 import Error
 import base64
 from base64 import b64encode
 import pdb
+import itertools
 
 app = Flask(__name__, template_folder='templates')
-
-
+app.secret_key ='\xd9\rx\xd2\xe8\xec\r\xcc\xac\xf2}\x8eF\x9csY'
 @app.route('/')
-def my_form():
-	return render_template('index.html')
+def home():
+	return render_template('home.html')
+
+@app.route('/sim', methods=['POST','GET'])
+def sim():
+	session["value"] = request.form.get('sim')
+	if session["value"] == '1':
+		conn = sqlite3.connect('simulation1.db')
+		simText = f'Simulation 1'
+	elif session["value"] == '2':
+		conn = sqlite3.connect('simulation2.db')
+		simText = f'Simulation 2'
+	elif session["value"] == '3':
+		conn = sqlite3.connect('simulation3.db')
+		simText = f'Simulation 3'	
+	
+	db = conn.cursor()
+	
+	db_table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))
+	db_table_list_first = []
+	for i in db_table_list:
+		db_table_list_first.append(i[0])
+	
+	core_dict = {}
+	for table in db_table_list_first:
+		core_dict[table] = {'core_id':[]}
+		name = str(table)
+		query = "SELECT {name}.core FROM {name}".format(name=name)
+		db.execute(query)
+		rows = db.fetchall()
+		for row in rows:
+			core_dict[table]['core_id'].append(str(row[0]))
+
+	list_dict = [list(d.values()) for d in core_dict.values()]
+	merged1 = list(itertools.chain(*list_dict))
+	merged2 = list(itertools.chain(*merged1))
+
+	core_list=[]
+	for i in merged2:
+		if i not in core_list:
+              		core_list.append(i)
+	
+	return render_template('sim.html',simText=simText, core_list=core_list)
 
 
 @app.route('/table', methods=['POST','GET'])
 
-
-
 def makeApp():
-
-	value = request.form.get('sim')
+	
+	value = session.get("value",None)
 	if value == '1':
 		conn=sqlite3.connect('simulation1.db')
 	elif value == '2':
@@ -28,12 +67,10 @@ def makeApp():
 		conn = sqlite3.connect('simulation3.db')
 
 	db = conn.cursor()
-
-
 	
-	cores_id = request.form.get('cores')
-	core_list = cores_id.split(",")
-	core_set = set(core_list)
+	cores_id = request.form.getlist('core_check')
+#	core_list = cores_id.split(",")
+	core_set = set(cores_id)
 
 	product_list = request.form.getlist('mycheckbox')
 
@@ -53,8 +90,8 @@ def makeApp():
 		header_list.append(str(tablename))
 		if tablename in table_list_first_ele:
 			product = str(tablename)
-			query = "SELECT {pro}.core,{pro}.product FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(core_list)), pro=product)		
-			db.execute(query, core_list)
+			query = "SELECT {pro}.core,{pro}.product FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(cores_id)), pro=product)		
+			db.execute(query, cores_id)
 			rows = db.fetchall()
 			for row in rows:
 				y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
