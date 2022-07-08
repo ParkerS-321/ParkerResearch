@@ -38,12 +38,14 @@ input[type="checkbox"] {
 <h1 align="center"> {{simText}} </h1>
 </header>
 
-<div style="position:relative; top: 25px;">
-<h2 style="position: relative; top: 50px; left: 50px;"> Table Builder </h2>
+<div style="position:relative; top: 5px; left: 10px;">
+<h2 style="position: relative; top: 50px; left: 55px;"> Table Builder </h2>
 <p style="position: relative; top: 50px; left: 10px;"> Select Desired Plots and Cores to Build Table </p>
 
 <form method="POST" action="/table">
-	<div style="position: relative; top: 50px; left: 40px;">
+	<h3 style="position: relative; top: 55px; left: 60px;"> Plots </h3>
+	<h3 style="position: relative; top: 15px; left: 195px;"> Scalars </h3>
+	<div style="position: relative; top: 20px; left: -10px;">
 	<ul>
 	<li>
 	<label class="checkbox"><input type="checkbox" value="blowing_hair" name="mycheckbox"> Blow_Hair </label>
@@ -73,15 +75,23 @@ input[type="checkbox"] {
 	<label class="checkbox"><input type="checkbox" value="velocity_heat" name="mycheckbox"> Velocity_heat </label>
 	</li>
 	<li>
-	<label><input type="checkbox" value="vr_vt" name="mycheckbox"> <span> VR_VT </span></label>
+	<label class="checkbox"><input type="checkbox" value=vr_vt" name="mycheckbox"> VR_VT </label>
 	</li>
+	<div style="position: relative; bottom: 200px; left: 150px;">
+	<li>
+	<label class="checkbox"><input type="checkbox" value="n_particles_scalars" name="mycheckbox"> N_Particles </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="mountain_top_scalars" name="mycheckbox"> Mountain_Top </label>
+	</li>
+	</div>
 	</ul>
 	</div>
 
 
 </head>
-<div style="position:relative; top: 50px; left: 10px;">
-<p> Highlight Desired Core: </p>
+<div style="position:relative; top: -10px; left: 10px;">
+<p> Search for Desired Core: </p>
 <input id="textBoxID" />
 <div style="position:relative; left: 175px; bottom:71px;">
 <p> Select All Cores: </p>
@@ -89,10 +99,13 @@ input[type="checkbox"] {
 </div>
 </div>
 
-<input type="submit" value="Build Table!" style="position:relative; left: 90px;">
+<input type="submit" value="Build Table!" style="position:relative; bottom: 40px; left: 110px;">
+<p> Note: Once table is built, you may sort the cores into </p>
+<p> ascending order. Any plots that do not exist within a </p>
+<p> given core will render 'X' </p>
 </div>
 
-<div style="position:relative; left: 375px; bottom: 410px;">
+<div style="position:relative; left: 400px; bottom: 600px;">
 <table class="sortable" id="table" border="1" style="font-size: 120%">
 <tr>
 <th colspan="15"> Available Cores from Simulation </th>
@@ -127,11 +140,14 @@ $.extend($.expr[":"], {
 return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
 }
 });
+
 $('#textBoxID').keyup(function(){
       $('td').css("background-color",''); 
     var value= $(this).val();
      $('td:containsNC("'+value+'")').css("background-color",'yellow');
  });
+
+
 
 
 </script>
