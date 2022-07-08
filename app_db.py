@@ -5,6 +5,7 @@ import base64
 from base64 import b64encode
 import pdb
 import itertools
+import re
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key ='\xd9\rx\xd2\xe8\xec\r\xcc\xac\xf2}\x8eF\x9csY'
@@ -50,7 +51,8 @@ def sim():
 	for i in merged2:
 		if i not in core_list:
               		core_list.append(i)
-	
+	core_list.sort()					#THOUGHT THIS WOULD SORT Core table but jinja batch messes it up
+
 	return render_template('sim.html',simText=simText, core_list=core_list)
 
 
@@ -94,7 +96,10 @@ def makeApp():
 			db.execute(query, cores_id)
 			rows = db.fetchall()
 			for row in rows:
-				y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
+				if isinstance(row[1], bytes) is True:
+					y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
+				else:
+					y[tablename]['products'].append(row[1])
 				y[tablename]['core_id'].append(str(row[0]))
 
 	THING = {}
@@ -107,7 +112,13 @@ def makeApp():
 			else:
 				index = y[tablename]['core_id'].index(core_id)						#Renders either 'X' if the product does not exist for the desired core
 				res = y[tablename]['products'][index]
-				renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>'	#Otherwise renders the html text to read within table.html
+				expression = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$"
+				matches = re.match(expression, str(res))
+				if matches:
+					renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>' 
+				else:	
+					renderText = res
+		
 			THING[core_id].append(renderText)
 
 	productList = []
