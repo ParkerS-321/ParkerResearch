@@ -16,11 +16,11 @@ def home():
 @app.route('/sim', methods=['POST','GET'])
 def sim():
 	session["value"] = request.form.get('sim')
-	if session["value"] == '1':
+	if session["value"] == '1':							
 		conn = sqlite3.connect('simulation1.db')
 		simText = f'Simulation 1'
 	elif session["value"] == '2':
-		conn = sqlite3.connect('simulation2.db')
+		conn = sqlite3.connect('simulation2.db')			#Connects to desired DB from selection on home page
 		simText = f'Simulation 2'
 	elif session["value"] == '3':
 		conn = sqlite3.connect('simulation3.db')
@@ -28,7 +28,7 @@ def sim():
 	
 	db = conn.cursor()
 	
-	db_table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))
+	db_table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))		#Gets list of all tables in desired DB
 	db_table_list_first = []
 	for i in db_table_list:
 		db_table_list_first.append(i[0])
@@ -37,7 +37,7 @@ def sim():
 	for table in db_table_list_first:
 		core_dict[table] = {'core_id':[]}
 		name = str(table)
-		query = "SELECT {name}.core FROM {name}".format(name=name)
+		query = "SELECT {name}.core FROM {name}".format(name=name)				#Gets all available cores from desired simulation
 		db.execute(query)
 		rows = db.fetchall()
 		for row in rows:
@@ -51,7 +51,7 @@ def sim():
 	for i in merged2:
 		if i not in core_list:
               		core_list.append(i)
-	core_list.sort()					#THOUGHT THIS WOULD SORT Core table but jinja batch messes it up
+	core_list.sort()					
 
 	return render_template('sim.html',simText=simText, core_list=core_list)
 
@@ -75,7 +75,8 @@ def makeApp():
 	core_set = set(cores_id)
 
 	product_list = request.form.getlist('mycheckbox')
-
+	product_list.insert(0, product_list.pop())
+	product_list.insert(0, product_list.pop())
 
 
 	table_list = list(db.execute('SELECT name from sqlite_master where type="table";'))			#Grabs a tuple of tables within the desired DB of the form (table, )
@@ -97,7 +98,7 @@ def makeApp():
 			rows = db.fetchall()
 			product_type = list(db.execute("SELECT typeof(product) from %s LIMIT 1;"%tablename))[0][0]
 			for row in rows:
-				if product_type == 'blob':
+				if product_type == 'blob':								#Checks datatype to determine how to append to dict
 					y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
 				else:
 					y[tablename]['products'].append(row[1])
@@ -111,10 +112,10 @@ def makeApp():
 			if core_id not in y[tablename]['core_id']:							
 				renderText = 'X'
 			else:
-				index = y[tablename]['core_id'].index(core_id)						#Renders either 'X' if the product does not exist for the desired core
+				index = y[tablename]['core_id'].index(core_id)						
 				res = y[tablename]['products'][index]
 				product_type = list(db.execute("SELECT typeof(product) from %s LIMIT 1;"%tablename))[0][0]
-				if product_type == 'blob':
+				if product_type == 'blob':										#Renders different HTML text based on product data type
 					renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>' 
 				else:	
 					renderText = res
