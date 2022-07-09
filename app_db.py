@@ -95,8 +95,9 @@ def makeApp():
 			query = "SELECT {pro}.core,{pro}.product FROM {pro} WHERE core IN ({co}) ORDER BY core ASC".format(co=','.join(['?'] * len(cores_id)), pro=product)		
 			db.execute(query, cores_id)
 			rows = db.fetchall()
+			product_type = list(db.execute("SELECT typeof(product) from %s LIMIT 1;"%tablename))[0][0]
 			for row in rows:
-				if isinstance(row[1], bytes) is True:
+				if product_type == 'blob':
 					y[tablename]['products'].append(b64encode(row[1]).decode('utf-8'))
 				else:
 					y[tablename]['products'].append(row[1])
@@ -112,9 +113,8 @@ def makeApp():
 			else:
 				index = y[tablename]['core_id'].index(core_id)						#Renders either 'X' if the product does not exist for the desired core
 				res = y[tablename]['products'][index]
-				expression = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$"
-				matches = re.match(expression, str(res))
-				if matches:
+				product_type = list(db.execute("SELECT typeof(product) from %s LIMIT 1;"%tablename))[0][0]
+				if product_type == 'blob':
 					renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>' 
 				else:	
 					renderText = res
