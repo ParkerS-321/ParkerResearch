@@ -30,7 +30,7 @@ input[type="checkbox"] {
 	zoom: 1.5;
 }
 
-
+label{ display:inline-block; width:100%;}
 </script>
 
 
@@ -75,7 +75,7 @@ input[type="checkbox"] {
 	<label class="checkbox"><input type="checkbox" value="velocity_heat" name="mycheckbox"> Velocity_heat </label>
 	</li>
 	<li>
-	<label class="checkbox"><input type="checkbox" value=vr_vt" name="mycheckbox"> VR_VT </label>
+	<label class="checkbox"><input type="checkbox" value="vr_vt" name="mycheckbox"> VR_VT </label>
 	</li>
 	<div style="position: relative; bottom: 200px; left: 150px;">
 	<li>
@@ -83,6 +83,9 @@ input[type="checkbox"] {
 	</li>
 	<li>
 	<label class="checkbox"><input type="checkbox" value="mountain_top_scalars" name="mycheckbox"> Mountain_Top </label>
+	</li>
+	<li>
+	<label class="checkbox"><input type="checkbox" value="neighborhood_scalars" name="mycheckbox"> Neighborhood_By_Core </label>
 	</li>
 	</div>
 	</ul>
@@ -113,7 +116,7 @@ input[type="checkbox"] {
 {% for row in core_list|batch(15, 'null') %}
 <tr>
 {% for core in row %}
-<td align="center"><input type="checkbox" value="{{core}}" name="core_check" class="btn_table"> {{core}} </td>
+<td align="center"><label><input type="checkbox" value="{{core}}" name="core_check" class="btn_table"> {{core}} </label></td>
 {% endfor %}
 </tr>
 {% endfor %}
@@ -156,6 +159,5 @@ $('#textBoxID').keyup(function(){
         window.history.replaceState( null, null, window.location.href );
     }
 </script>
-
 
 </html>
