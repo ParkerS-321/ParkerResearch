@@ -113,7 +113,7 @@ label{ display:inline-block; width:100%;}
 <tr>
 <th colspan="15"> Available Cores from Simulation </th>
 </tr>
-{% for row in core_list|batch(15, 'null') %}
+{% for row in core_list|batch(15) %}
 <tr>
 {% for core in row %}
 <td align="center"><label><input type="checkbox" value="{{core}}" name="core_check" class="btn_table"> {{core}} </label></td>
