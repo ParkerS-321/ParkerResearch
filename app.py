@@ -72,8 +72,6 @@ def makeApp():
 	db = conn.cursor()
 	
 	cores_id = request.form.getlist('core_check')
-	val = "null"
-	cores_id = [i for i in cores_id if i != val]                     #Removes all occurences of 'null' in cores_id
 #	core_list = cores_id.split(",")
 	core_set = set(cores_id)
 
