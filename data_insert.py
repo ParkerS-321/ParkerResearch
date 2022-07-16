@@ -1,4 +1,5 @@
 import glob
+import os
 import re
 import sqlite3
 from sqlite3 import Error
@@ -11,14 +12,6 @@ def convertToBinary(filename):
 		blobData = file.read()
 	return blobData
 
-def create_connection(sim_name):
-	conn = None
-	try:
-		conn =  sqlite3.connect(sim_name)
-		return conn
-	except Error as e:
-		print (e)
-	return conn
 
 def create_table(conn, create_table_sql):
 	""" create a table from the create_table_sql statement"""
@@ -40,32 +33,45 @@ def create_entry(conn, insert_sql, entry):
 
 
 class Product():
-	def __init__(self, name, regexp):
+	def __init__(self, name, regexp, sim_name):
 		self.name = name
 		self.regexp = regexp
+		self.sim_name = sim_name
+		self.ftype_list = []
 		self.file_list = []
 		self.blob_list = []
 		self.core_list = []
 		self.table_descriptor = """ CREATE TABLE IF NOT EXISTS {} (
 						id integer PRIMARY KEY,
 						core integer NOT NULL,
-						product BLOB
+						product BLOB,
+						ftype text
 					);""".format(self.name)
 		
 		self.scalar_descriptor = """ CREATE TABLE IF NOT EXISTS {} (
 						id integer PRIMARY KEY,
 						core integer NOT NULL,
-						product integer
+						product integer,
+						ftype text
 					);""".format(self.name)
 								
 
-		self.insert_descriptor = """ INSERT INTO {} (core, product)
-						VALUES (?,?) """.format(self.name)	
+		self.insert_descriptor = """ INSERT INTO {} (core, product, ftype)
+						VALUES (?,?,?) """.format(self.name)
 		
 		self.scalar_insert_descriptor = """ INSERT INTO {} (core, product)
-						       VALUES (?,?) """.format(self.name)
-					
+							VALUES (?,?) """.format(self.name)	
+		
 			
+	def create_connection(self):
+		conn = None
+		try:
+			conn =  sqlite3.connect(self.sim_name)
+			return conn
+		except Error as e:
+			print (e)
+		return conn
+
 
 	def get_files(self, all_files=None):
 		if all_files is None:
@@ -81,7 +87,9 @@ class Product():
 		
 		for file in self.file_list:
 			self.blob_list.append(convertToBinary(file))
-		combined_data = tuple(zip(self.core_list,self.blob_list))
+			ext = os.path.splitext(file)
+			self.ftype_list.append(ext[1])
+		combined_data = tuple(zip(self.core_list,self.blob_list,self.ftype_list))
 
 		return combined_data
 
@@ -148,7 +156,7 @@ def readProductList(control_file):
 	with open(control_file) as file:
 		for line in file:
 			strs = [str(i) for i in line.strip().split(',') if i]
-			product_list.append( Product(strs[0], strs[1]) )
+			product_list.append( Product(strs[0], strs[1], strs[2]) )
 	return product_list				
 
 			
@@ -157,9 +165,10 @@ if __name__ =='__main__':
 
 	list_of_product_objects = readProductList("control_sim1.txt")
 	all_files = glob.glob("**", recursive=True)
-	conn = create_connection('simulation3.db')
+#	conn = create_connection('simulation3.db')
 	for product in list_of_product_objects:
-		p = product.get_scalars(all_files=all_files)
+		conn = product.create_connection()
+		p = product.get_neighborhood_scalars(all_files=all_files)
 		create_table(conn, product.scalar_descriptor)
 		create_entry(conn, product.scalar_insert_descriptor, p)
 

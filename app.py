@@ -119,8 +119,9 @@ def makeApp():
 				index = y[tablename]['core_id'].index(core_id)						
 				res = y[tablename]['products'][index]
 				product_type = list(db.execute("SELECT typeof(product) from %s LIMIT 1;"%tablename))[0][0]
+				ftype = list(db.execute("SELECT ftype from %s LIMIT 1;"%tablename))[0][0]
 				if product_type == 'blob':										#Renders different HTML text based on product data type
-					if np.log10(len(res)) > 6:
+					if ftype == '.mp4':
 						renderText = f'<video width="300" height="300" controls><source src="data:video/mp4;base64, {res}"></video>'
 					else:
 						renderText = f'<img src="data:image/png;base64, {res}" width="300" height="300"/>' 
