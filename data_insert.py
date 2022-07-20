@@ -51,10 +51,10 @@ class Product():
 		self.core_list = []
 
 		file_type = self.regexp.split(".")[-1]
-		if file_type == 'png' or file_type == 'mp4':
-				self.run = self.get_files()
 		if file_type == 'h5':
 			self.run = self.get_scalars()
+		else:
+			self.run = self.get_files()
 
 
 		self.table_descriptor = """ CREATE TABLE IF NOT EXISTS {} (
@@ -178,6 +178,8 @@ if __name__ =='__main__':
 	for product in list_of_product_objects:
 		conn = product.create_connection()
 		p = product.run
+		print(p)
+		pdb.set_trace()
 		if p[0][2] == '.h5':
 			create_table(conn, product.scalar_descriptor)	
 			create_entry(conn, product.scalar_insert_descriptor, p)
