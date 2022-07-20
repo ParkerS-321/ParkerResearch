@@ -12,6 +12,14 @@ def convertToBinary(filename):
 		blobData = file.read()
 	return blobData
 
+def append_value(dict_obj, key, value):
+	if key in dict_obj:
+		if not isinstance(dict_obj[key], list):
+			dict_obj[key] = [dict_obj[key]]
+		dict_obj[key].append(value)
+	else:
+		dict_obj[key] = value
+
 
 def create_table(conn, create_table_sql):
 	""" create a table from the create_table_sql statement"""
@@ -41,6 +49,14 @@ class Product():
 		self.file_list = []
 		self.blob_list = []
 		self.core_list = []
+
+		file_type = self.regexp.split(".")[-1]
+		if file_type == 'png' or file_type == 'mp4':
+				self.run = self.get_files()
+		if file_type == 'h5':
+			self.run = self.get_scalars()
+
+
 		self.table_descriptor = """ CREATE TABLE IF NOT EXISTS {} (
 						id integer PRIMARY KEY,
 						core integer NOT NULL,
@@ -59,8 +75,8 @@ class Product():
 		self.insert_descriptor = """ INSERT INTO {} (core, product, ftype)
 						VALUES (?,?,?) """.format(self.name)
 		
-		self.scalar_insert_descriptor = """ INSERT INTO {} (core, product)
-							VALUES (?,?) """.format(self.name)	
+		self.scalar_insert_descriptor = """ INSERT INTO {} (core, product, ftype)
+							VALUES (?,?,?) """.format(self.name)	
 		
 			
 	def create_connection(self):
@@ -94,62 +110,56 @@ class Product():
 		return combined_data
 
 
-	def get_nparticle_scalars(self, all_files=None):
+	def get_scalars(self, all_files=None):
 		if all_files is None:
-			all_files = glob.glob("**", recursive=True)
-		
+			all_files = glob.glob("**", recursive=True)		
 		for file in all_files:
 			match = re.compile(self.regexp).match(file)
 			if match:
-				Fptr = h5py.File(file, 'r')
-				Core_ids = Fptr['core_ids'][()]
-				N_particles = Fptr['n_particles'][()]
-				other_THING = dict(zip(Core_ids, N_particles))
-				keys_values = other_THING.items()
-				str_THING = {str(key): str(value) for key, value in keys_values}
-				other_combined = [(k,v) for k,v in str_THING.items()]
-				found=match
-
+				if 'nparticles' in file:
+					ext = os.path.splitext(file)
+					f_ext = ext[1]
+					Fptr = h5py.File(file, 'r')
+					Core_ids = Fptr['core_ids'][()]
+					N_particles = Fptr['n_particles'][()]
+					other_THING = dict(zip(Core_ids, N_particles))
+					for key in other_THING:
+						append_value(other_THING, key, f_ext)
+					keys_values = other_THING.items()
+					other_combined = []
+					for x, (y, z) in keys_values:
+						other_combined.append((str(x), str(y), str(z)))
+					found=match
+				if 'neighborhood' in file:
+					ext = os.path.splitext(file)
+					f_ext = ext[1]
+					Fptr = h5py.File(file, 'r')
+					Core_ids = Fptr['core_ids'][()]
+					Neighborhood = Fptr['neighborhood'][()]
+					other_THING = dict(zip(Core_ids, Neighborhood))
+					for key in other_THING:
+						append_value(other_THING, key, f_ext)
+					keys_values = other_THING.items()
+					other_combined = []
+					for x, (y, z) in keys_values:
+						other_combined.append((str(x), str(y), str(z)))
+					found=match
+				if 'mountain_top' in file:
+					ext = os.path.splitext(file)
+					f_ext = ext[1]
+					fptr = h5py.File(file, 'r')
+					THING_TO_FILL = {}
+					for group in fptr:
+						peak_id = fptr[group]['peak_id'][()]
+						THING_TO_FILL[peak_id] = fptr[group]['peak_density'][()]
+					for key in THING_TO_FILL:
+						append_value(THING_TO_FILL, key, f_ext)
+					keys_values = THING_TO_FILL.items()
+					other_combined = []
+					for x, (y, z) in keys_values:
+						other_combined.append((str(x), str(y), str(z)))
 		return other_combined
 	
-	def get_neighborhood_scalars(self, all_files=None):
-		if all_files is None:
-			all_files = glob.glob("**", recursive=True)
-
-		for file in all_files:
-			match = re.compile(self.regexp).match(file)
-			if match:
-				Fptr = h5py.File(file, 'r')
-				Core_ids = Fptr['core_ids'][()]
-				Neighborhood = Fptr['neighborhood'][()]
-				other_THING = dict(zip(Core_ids, Neighborhood))
-				keys_values = other_THING.items()
-				str_THING = {str(key): str(value) for key, value in keys_values}
-
-				other_combined = [(k,v) for k,v in str_THING.items()]
-				found=match	
-		return other_combined
-		
-
-
-	def get_mountaintop_scalars(self, all_files=None):
-		if all_files is None:
-			all_files = glob.glob("**", recursive=True)
-		
-		for file in all_files:
-			match = re.compile(self.regexp).match(file)
-			if match:
-				fptr = h5py.File(file, 'r')
-				THING_TO_FILL = {}
-				for group in fptr:
-					peak_id = fptr[group]['peak_id'][()]
-					THING_TO_FILL[peak_id] = fptr[group]['peak_density'][()]
-				keys_values = THING_TO_FILL.items()
-				str_THING = {str(key): str(value) for key, value in keys_values}
-				mt_combined = [(k,v) for k,v in str_THING.items()]
-		
-		return mt_combined
-		
 
 def readProductList(control_file):
 	product_list = []
@@ -163,13 +173,14 @@ def readProductList(control_file):
 
 if __name__ =='__main__':
 
-	list_of_product_objects = readProductList("control_sim1.txt")
+	list_of_product_objects = readProductList("control_sim3.txt")
 	all_files = glob.glob("**", recursive=True)
-#	conn = create_connection('simulation3.db')
 	for product in list_of_product_objects:
 		conn = product.create_connection()
-		p = product.get_neighborhood_scalars(all_files=all_files)
-		create_table(conn, product.scalar_descriptor)
-		create_entry(conn, product.scalar_insert_descriptor, p)
-
-
+		p = product.run
+		if p[0][2] == '.h5':
+			create_table(conn, product.scalar_descriptor)	
+			create_entry(conn, product.scalar_insert_descriptor, p)
+		else:
+			create_table(conn, product.table_descriptor)
+			create_entry(conn, product.insert_descriptor, p)
