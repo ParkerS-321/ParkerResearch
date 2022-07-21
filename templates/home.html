@@ -1,12 +1,13 @@
 <html>
   <head></head>
    <body>
-     <h1> Welcome to ......... </h1>
+    <div style="position: relative; left: 500px; top: 50px;">
+     <h1> Welcome to Core Browser </h1>
 	<ul>
 		<li>Select Which Simulation Model to View Plots For! </li>
 	</ul>
 	<form method="POST" action="/sim">
-		<fieldset class="set">
+		<fieldset class="set" style="width:450px; position: relative; right: 40px;">
 			<legend> Select Simulation </legend>
 				<input type="radio" id="sim_select" name="sim" value="1">
 				<label class="fmt" for="sim"> Simulation 1 </label>
@@ -18,6 +19,18 @@
 				<input type="submit">
 		</fieldset>
 	</form>
-	
+    </div>
+	<div style="position:relative; top: 140px; left: 120px;">
+	<h2 style="position: relative; left: 160px;"> About the Tool </h2>
+	<p> This is a web tool designed to assist in the visualization of data gathered from </p>
+	<p> the paper, The History of Prestellar Cores I: Initial Density and Velocity distributions.</p>
+	<p> Select which simulation to view from, and then you will be taken to a table builder where</p>
+	<p> you can select and customize the data. Once selected, all data will be displayed for the </p>
+	<p> given cores, with an 'X' for any data that wasn't gathered.<p> 
+    </div>   
    </body>
+<table style="position:relative; left: 850px; bottom: 150px;">
+	<td><video width="300" height="300" controls><source src="data:video/mp4;base64, {{x}}"></video></td>
+</table>
+<p style="position: relative; left: 845px; bottom: 130px;"> Ex. Core 0 from Simulation 3:  GE_KE_z3 movie </p> 
 </html>
