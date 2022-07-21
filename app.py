@@ -12,7 +12,14 @@ app = Flask(__name__, template_folder='templates')
 app.secret_key ='\xd9\rx\xd2\xe8\xec\r\xcc\xac\xf2}\x8eF\x9csY'
 @app.route('/')
 def home():
-	return render_template('home.html')
+	conn = sqlite3.connect('simulation3.db')
+	db = conn.cursor()
+	query = "Select GE_KE_z3.product from GE_KE_z3 WHERE core='0'"
+	db.execute(query)
+	rows=db.fetchall()
+	x = b64encode(rows[0][0]).decode('utf-8')
+#	renderText = f'<video width="300" height="300" controls><source src="data:video/mp4;base64, {x}"></video>'
+	return render_template('home.html', x=x)
 
 @app.route('/sim', methods=['POST','GET'])
 def sim():
