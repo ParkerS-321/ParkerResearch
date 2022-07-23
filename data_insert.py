@@ -70,7 +70,14 @@ class Product():
 						product integer,
 						ftype text
 					);""".format(self.name)
-								
+		
+		self.scalar_text_descriptor = """ CREATE TABLE IF NOT EXISTS {} (
+                                                id integer PRIMARY KEY,
+                                                core integer NOT NULL,
+                                                product text,
+                                                ftype text
+                                        );""".format(self.name)
+										
 
 		self.insert_descriptor = """ INSERT INTO {} (core, product, ftype)
 						VALUES (?,?,?) """.format(self.name)
@@ -130,6 +137,22 @@ class Product():
 					for x, (y, z) in keys_values:
 						other_combined.append((str(x), str(y), str(z)))
 					found=match
+				
+				if 'core_formation' in file:
+					ext = os.path.splitext(file)
+					f_ext = ext[1]
+					Fptr = h5py.File(file, 'r')
+					Core_ids = Fptr['core_ids'][()]
+					Modes = Fptr['modes'][()]
+					other_THING = dict(zip(Core_ids, Modes.astype('U13')))
+					for key in other_THING:
+						append_value(other_THING, key, f_ext)
+					keys_values = other_THING.items()
+					other_combined = []
+					for x, (y, z) in keys_values:
+						other_combined.append((str(x), str(y), str(z)))
+					found=match
+					
 				if 'neighborhood' in file:
 					ext = os.path.splitext(file)
 					f_ext = ext[1]
@@ -178,11 +201,13 @@ if __name__ =='__main__':
 	for product in list_of_product_objects:
 		conn = product.create_connection()
 		p = product.run
-		print(p)
-		pdb.set_trace()
 		if p[0][2] == '.h5':
-			create_table(conn, product.scalar_descriptor)	
-			create_entry(conn, product.scalar_insert_descriptor, p)
+			if isinstance(p[0][1],str):
+				create_table(conn, product.scalar_text_descriptor)
+				create_entry(conn, product.scalar_insert_descriptor, p)
+			else:
+				create_table(conn, product.scalar_descriptor)	
+				create_entry(conn, product.scalar_insert_descriptor, p)
 		else:
 			create_table(conn, product.table_descriptor)
 			create_entry(conn, product.insert_descriptor, p)
